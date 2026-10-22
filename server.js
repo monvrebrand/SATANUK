@@ -304,9 +304,9 @@ app.post('/api/login', loginLimiter, async (req, res) => {
             } 
         });
     } catch (err) {
-        console.error('Database error:', err);
-        await logLoginAttempt(username, req.ip, 'failure', `Database error: ${err.message}`);
-        res.status(500).json({ success: false, message: 'Database error' });
+        console.error('Database error in /api/login:', err);
+        await logLoginAttempt(cleanUsername, req, 'failure', `Database error: ${err.message}`);
+        res.status(500).json({ success: false, message: 'Database error', detail: err.message });
     }
 });
 
