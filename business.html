@@ -31,37 +31,42 @@
 <body class="index-page">
 
   <!-- Header (identical to business-accounts.html) -->
-  <header id="topbar" class="header d-flex align-items-center" style="background-color: red;">
+    <header id="header" class="header santander-header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        <nav id="navmenu" class="navmenu">
-            <ul>
-                <li><a href="personal" class="text-white">Personal</a></li>
-                <li><a href="private" class="text-white">Private</a></li>
-                <li><a href="business" class="active text-white">Business</a></li>
-                <li><a href="corporate" class="text-white">Corporate</a></li>
-                <li class="d-xl-none"><hr class="my-2 border-secondary"></li>
-                <li class="d-xl-none"><a href="index" class="text-white">Home</a></li>
-                <li class="d-xl-none"><a href="customer-support" class="text-white">Customer Support</a></li>
-                <li class="d-xl-none"><a href="register" class="text-white">Register</a></li>
-                <li class="d-xl-none"><a href="login" class="text-white">Login</a></li>
-            </ul>
-        </nav>
-        <div class="ms-auto d-flex align-items-center">
-              <a class="btn-getstarted hide-mobile-btn" href="index">Home</a>
-              <a class="btn-getstarted hide-mobile-btn" href="customer-support">Contact</a>
-              <a class="btn-getstarted bg-white" href="register" style="color: red;">Register</a>
-              <a class="btn-getstarted bg-white" href="login" style="color: red;">Login</a>
+      <div class="d-flex align-items-center">
+        <i class="mobile-nav-toggle d-xl-none bi bi-list text-white"></i>
+        <a href="index" class="logo me-3">
+          <img src="img/logo-white.png" alt="Santander Logo">
+          <span class="brand-text">Santander</span>
+        </a>
       </div>
-    </div>
-  </header>
 
-  <header id="header" class="header align-items-center">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-      <a href="index" class="logo d-flex align-items-center me-auto">
-        <img src="img/logo.png" alt="Santander Logo" class="img-fluid">
-        <h4 class="pt-3 fw-bold" style="color: red;">Santander</h4>
-      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="personal" class="text-white">Personal</a></li>
+          <li><a href="private" class="text-white">Private</a></li>
+          <li><a href="business" class="text-white active">Business</a></li>
+          <li><a href="corporate" class="text-white">Corporate</a></li>
+          <li class="d-xl-none"><hr class="my-2 border-secondary"></li>
+          <li class="d-xl-none"><a href="current-accounts" class="text-white">Current Accounts</a></li>
+          <li class="d-xl-none"><a href="savings-isas" class="text-white">Savings &amp; ISAs</a></li>
+          <li class="d-xl-none"><a href="credit-cards" class="text-white">Credit Cards</a></li>
+          <li class="d-xl-none"><a href="loans" class="text-white">Loans</a></li>
+          <li class="d-xl-none"><a href="mortgages" class="text-white">Mortgages</a></li>
+          <li class="d-xl-none"><a href="insurance" class="text-white">Insurance</a></li>
+          <li class="d-xl-none"><a href="customer-support" class="text-white">Customer Support</a></li>
+          <li class="d-xl-none"><hr class="my-2 border-secondary"></li>
+          <li class="d-xl-none"><a href="register" class="text-white">Register</a></li>
+          <li class="d-xl-none"><a href="login" class="text-white">Log on</a></li>
+        </ul>
+      </nav>
+
+      <div class="d-flex align-items-center gap-2">
+        <a class="btn-santander-light hide-mobile-btn" href="index">Home</a>
+        <a class="btn-santander-light hide-mobile-btn" href="customer-support">Contact</a>
+        <a class="btn-santander-white" href="register">Register</a>
+        <a class="btn-santander-white" href="login">Log on</a>
+      </div>
     </div>
   </header>
 

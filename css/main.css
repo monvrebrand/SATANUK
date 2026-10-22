@@ -2135,3 +2135,87 @@ footer .small {
     padding-left: 0;
   }
 }
+
+/*--------------------------------------------------------------
+# Unified Santander Header
+--------------------------------------------------------------*/
+.santander-header {
+  background-color: #ec0000 !important;
+  min-height: 60px;
+  padding: 10px 0 !important;
+  z-index: 997;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.santander-header .logo {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.santander-header .logo img {
+  height: 32px !important;
+  max-height: 32px !important;
+  width: auto !important;
+  margin-right: 8px !important;
+}
+
+.santander-header .logo .brand-text {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff !important;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.santander-header .btn-santander-light {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.santander-header .btn-santander-light:hover {
+  background: rgba(255, 255, 255, 0.26) !important;
+  color: #ffffff !important;
+}
+
+.santander-header .btn-santander-white {
+  background: #ffffff !important;
+  color: #ec0000 !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  border: none !important;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.santander-header .btn-santander-white:hover {
+  background: #f8f9fa !important;
+  color: #c70000 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 576px) {
+  .santander-header .logo .brand-text {
+    font-size: 1.2rem;
+  }
+  .santander-header .btn-santander-white {
+    padding: 5px 12px !important;
+    font-size: 13px !important;
+  }
+}
