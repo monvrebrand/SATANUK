@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>mep | View Statements</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="css/main.css" rel="stylesheet">
+  <!-- PDF Generation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body class="index-page">
+<header id="topbar" class="header d-flex align-items-center" style="background-color: red;">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+      <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a href="inside" class="text-white">Dashboard</a></li>
+                <li><a href="transfer" class="text-white">Transfer</a></li>
+                <li><a href="pay-bill" class="text-white">Pay Bills</a></li>
+                <li><a href="statements" class="text-white active">Statements</a></li>
+                <li><a href="account-settings" class="text-white">Settings</a></li>
+                <li class="d-xl-none"><hr class="my-1"></li>
+                <li class="d-xl-none"><a href="personal" class="text-white">Personal Banking</a></li>
+                <li class="d-xl-none"><a href="business" class="text-white">Business Banking</a></li>
+                <li class="d-xl-none"><a href="customer-support" class="text-white">Contact & Support</a></li>
+            </ul>
+        </nav>
+
+      <div class="ms-auto d-flex align-items-center">
+            <a class="btn-getstarted" href="inside">Dashboard</a>
+            <a class="btn-getstarted" href="customer-support">Contact</a>
+            
+              <div class="dropdown d-inline-block ms-2 me-2">
+                <a class="nav-link position-relative" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 8px 15px; border-radius: 4px; display: inline-flex; align-items: center;">
+                  <i class="bi bi-bell fs-5 text-white"></i>
+                  <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-danger d-none" style="font-size: 0.6rem; margin-top: 5px; margin-left: -5px;">
+                    0
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notificationDropdown" id="notificationList" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                  <li><div class="dropdown-item text-center text-muted">No notifications</div></li>
+                </ul>
+              </div>
+              <button class="btn-getstarted bg-white border-0" onclick="logout()" style="color: red;">Log out</button>
+    </div>
+  </div>
+</header>
+<header id="header" class="header align-items-center">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center">
+    <a href="inside" class="logo d-flex align-items-center me-auto">
+      <img src="img/logo.png" alt="" class="img-fluid" >
+      <h4 class="pt-3 fw-bold" style="color: red;">Santander</h4>
+    </a>
+  </div>
+</header>
+<main class="main">
+  <div class="container mt-5">
+      <div class="row mb-4"><div class="col-12"><a href="inside" class="text-decoration-none" style="color: red;"><i class="bi bi-arrow-left me-2"></i>Back to Dashboard</a></div></div>
+      <div class="row mb-4">
+          <div class="col-lg-6 offset-lg-3">
+              <div class="card shadow-sm border-0 p-4">
+                  <form id="statementForm" class="row g-3">
+                      <div class="col-md-6">
+                          <label for="accountSelect" class="form-label">Account</label>
+                          <select id="accountSelect" class="form-select" required>
+                              <option value="">Choose account</option>
+                          </select>
+                      </div>
+                      <div class="col-md-6">
+                          <label for="periodSelect" class="form-label">Statement Period</label>
+                          <select id="periodSelect" class="form-select" required disabled>
+                              <option value="">Select an account first</option>
+                          </select>
+                      </div>
+                      <div class="col-12 text-end">
+                          <button type="submit" class="btn btn-danger">Show Statements</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12" id="statementsContainer">
+              <!-- filled by JS -->
+          </div>
+      </div>
+  </div>
+</main>
+<hr />
+<div class="container mt-5">
+  <div class="row g-3">
+      <div class="col-md-6">
+          <div class="p-4 border bg-light rounded">
+              <h5 class="fw-bold text-danger"><i class="bi bi-shield-check me-2"></i>Protecting your money</h5>
+              <p class="mb-0 text-muted">Your eligible deposits with Santander UK plc are protected up to a total of £85,000 by the Financial Services Compensation Scheme (FSCS), the UK's deposit guarantee scheme.</p>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="p-4 border bg-light rounded">
+              <h5 class="fw-bold text-danger"><i class="bi bi-lock me-2"></i>Stop, Challenge, Protect</h5>
+              <p class="mb-0 text-muted">Take Five to Stop Fraud. Never share your security codes, passwords, or PIN with anyone, even if they claim to be from Santander or the police.</p>
+          </div>
+      </div>
+  </div>
+</div>
+
+<footer class="text-center text-dark">
+  <div class="container">
+    <section class="mb-4 mt-5">
+      <div class="row d-flex justify-content-start">
+        <div class="col-lg-12">
+          <p class="text-muted small">
+            Santander UK plc. Registered Office: 2 Triton Square, Regent's Place, London, NW1 3AN, United Kingdom. Registered Number 2294747. Registered in England and Wales. Authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority. Financial Services Register number 106054. www.santander.co.uk. Santander and the flame logo are registered trademarks of Banco Santander, S.A. and are used under license.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="text-center mb-5">
+      <a href="#" class="text-secondary me-4 fs-5" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-secondary me-4 fs-5" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+      <a href="#" class="text-secondary me-4 fs-5" aria-label="Google"><i class="bi bi-google"></i></a>
+      <a href="#" class="text-secondary me-4 fs-5" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+      <a href="#" class="text-secondary me-4 fs-5" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+      <a href="#" class="text-secondary me-4 fs-5" aria-label="GitHub"><i class="bi bi-github"></i></a>
+    </section>
+  </div>
+</footer>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async function(){
+    const userStr = localStorage.getItem('santander_user');
+    let currentTransactions = []; // To store transactions for download
+    if(!userStr){ window.location.href='login'; return; }
+    const user = JSON.parse(userStr);
+
+    try{
+      const dashRes = await fetch(`/api/user/${user.username}/dashboard`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('customerToken')}` } });
+      const dashData = await dashRes.json();
+      if(dashData.success){
+        const accountSelect = document.getElementById('accountSelect');
+        dashData.accounts.forEach(acc=>{
+          const opt = document.createElement('option'); 
+          opt.value = acc.account_number;
+          const maskedAcc = '****' + String(acc.account_number).slice(-4);
+          opt.textContent = `${acc.account_type} - ${maskedAcc}`;
+          accountSelect.appendChild(opt);
+        });
+      }
+    } catch(e) { console.error('Error loading accounts', e); }
+
+    document.getElementById('accountSelect').addEventListener('change', async function() {
+        const accountNumber = this.value;
+        const periodSelect = document.getElementById('periodSelect');
+        periodSelect.innerHTML = '<option value="">Loading periods...</option>';
+        periodSelect.disabled = true;
+
+        if (!accountNumber) {
+            periodSelect.innerHTML = '<option value="">Select an account first</option>';
+            return;
+        }
+
+        const periodsRes = await fetch(`/api/account/${accountNumber}/statement-periods`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('customerToken')}` } });
+        const periodsData = await periodsRes.json();
+        periodSelect.innerHTML = '<option value="">All Transactions</option>'; // Default option
+        periodsData.periods.forEach(p => {
+            periodSelect.innerHTML += `<option value="${p.year}-${p.month}">${p.label}</option>`;
+        });
+        periodSelect.disabled = false;
+    });
+
+    document.getElementById('statementForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const accountNumber = document.getElementById('accountSelect').value;
+      const period = document.getElementById('periodSelect').value;
+      const container = document.getElementById('statementsContainer');
+      container.innerHTML='<div class="text-center py-5"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+      try{
+        let url = `/api/account/${accountNumber}/transactions`;
+        if (period) {
+            const [year, month] = period.split('-');
+            // Add '?' only if we have parameters
+            url += `?year=${year}&month=${month}`;
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+        if(data.success){
+          currentTransactions = data.transactions; // Store for download
+          if(data.transactions.length===0){
+            container.innerHTML='<div class="alert alert-info">No transactions found for the selected period.</div>';
+            return;
+          }
+          const rows=data.transactions.map(tx=>{
+            const d=new Date(tx.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const isDebit=tx.transaction_type.toLowerCase().includes('debit')||tx.transaction_type.toLowerCase().includes('withdrawal');
+            const amtClass=isDebit?'text-danger':'text-success';
+            const sign=isDebit?'-':'+';
+            return `<tr><td>${d}</td><td>${tx.description||tx.transaction_type}</td><td>${tx.transaction_type}</td><td class="${amtClass}">${sign}£${parseFloat(tx.amount).toFixed(2)}</td><td>£${parseFloat(tx.balance_after).toFixed(2)}</td></tr>`;
+          }).join('');
+          container.innerHTML=`
+            <div class="card shadow-sm border-0">
+              <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h5 class="card-title fw-bold mb-0">Transaction History</h5>
+                  <button class="btn btn-outline-danger" onclick="downloadStatement()">
+                    <i class="bi bi-download me-2"></i>Download Statement
+                  </button>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class="table-light">
+                      <tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Balance</th></tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        }else{
+          container.innerHTML=`<div class="alert alert-danger">${data.message}</div>`;
+        }
+      }catch(err){console.error(err);container.innerHTML='<div class="alert alert-danger">Error loading statements.</div>';}    
+    });
+
+    window.downloadStatement = async function() {
+      if (currentTransactions.length === 0) {
+          alert('No transactions to download.');
+          return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const user = JSON.parse(localStorage.getItem('santander_user'));
+      const accountSelect = document.getElementById('accountSelect');
+      const periodSelect = document.getElementById('periodSelect');
+      const accountText = accountSelect.options[accountSelect.selectedIndex].text;
+      const periodText = periodSelect.options[periodSelect.selectedIndex].text;
+      const formatter = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+
+      // 1. Add Logo (Top Right)
+      try {
+          const logoUrl = 'img/logo.png';
+          const imgData = await getBase64ImageFromUrl(logoUrl);
+          // Add image at x=160, y=10, width=35, height=10 (approx aspect ratio)
+          doc.addImage(imgData, 'PNG', 160, 10, 35, 10);
+      } catch (e) {
+          console.warn('Logo could not be loaded for PDF', e);
+      }
+
+      // Add Bank Name under logo
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(220, 53, 69); // Santander Red
+      doc.text("Santander", 160, 25);
+
+      // 2. Header & Account Info
+      doc.setFontSize(18);
+      doc.setTextColor(220, 53, 69); // Santander Red
+      doc.text("Statement of Account", 14, 20);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+
+      // Calculate Balances
+      // currentTransactions is sorted Newest -> Oldest
+      const latestTx = currentTransactions[0];
+      const earliestTx = currentTransactions[currentTransactions.length - 1];
+      
+      const endingBalance = parseFloat(latestTx.balance_after);
+      
+      // Calculate starting balance by reversing the oldest transaction
+      let startingBalance = parseFloat(earliestTx.balance_after);
+      const amount = parseFloat(earliestTx.amount);
+      const type = earliestTx.transaction_type.toLowerCase();
+      
+      // If it was a credit, start was lower. If debit, start was higher.
+      if (type.includes('credit') || type.includes('deposit')) {
+          startingBalance -= amount;
+      } else {
+          startingBalance += amount;
+      }
+
+      // Left Column
+      doc.setFont("helvetica", "bold");
+      doc.text("Account Name:", 14, 35);
+      doc.text("Account Number:", 14, 40);
+      doc.text("Statement Period:", 14, 45);
+
+      doc.setFont("helvetica", "normal");
+      doc.text(`${user.firstname} ${user.surname}`, 50, 35);
+      doc.text(accountText.split(' - ')[1] || accountText, 50, 40);
+      doc.text(periodText, 50, 45);
+
+      // Right Column (Balances)
+      doc.setFont("helvetica", "bold");
+      doc.text("Starting Balance:", 120, 35);
+      doc.text("Ending Balance:", 120, 40);
+
+      doc.setFont("helvetica", "normal");
+      doc.text(formatter.format(startingBalance), 160, 35);
+      doc.text(formatter.format(endingBalance), 160, 40);
+
+      // 3. Transaction Table
+      // Reverse transactions to show Oldest -> Newest for the statement PDF
+      const chronologicalTxs = [...currentTransactions].reverse();
+      
+      const tableRows = chronologicalTxs.map(tx => {
+          const date = new Date(tx.created_at).toLocaleDateString('en-GB');
+          const desc = tx.description || tx.transaction_type;
+          const isDebit = tx.transaction_type.toLowerCase().includes('debit') || tx.transaction_type.toLowerCase().includes('withdrawal');
+          const sign = isDebit ? '-' : '+';
+          const amt = sign + formatter.format(tx.amount); 
+          const bal = formatter.format(tx.balance_after);
+          return [date, desc, tx.transaction_type, amt, bal];
+      });
+
+      doc.autoTable({
+          head: [['Date', 'Description', 'Type', 'Amount', 'Balance']],
+          body: tableRows,
+          startY: 55,
+          theme: 'striped',
+          headStyles: { fillColor: [220, 53, 69] }, // Santander Red
+          styles: { fontSize: 9 },
+          columnStyles: {
+              3: { halign: 'right' },
+              4: { halign: 'right' }
+          }
+      });
+
+      doc.save(`statement-${accountSelect.value}-${periodText.replace(/\s/g, '-')}.pdf`);
+    }
+
+    // Helper to load image for PDF
+    function getBase64ImageFromUrl(url) {
+        return new Promise((resolve, reject) => {
+            var img = new Image();
+            img.setAttribute("crossOrigin", "anonymous");
+            img.onload = () => {
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                var dataURL = canvas.toDataURL("image/png");
+                resolve(dataURL);
+            };
+            img.onerror = error => reject(error);
+            img.src = url;
+        });
+    }
+  });
+  function logout(){localStorage.removeItem('santander_user');window.location.href='index';}
+</script>
+  <script src="js/notifications.js"></script>
+</body>
+</html>
