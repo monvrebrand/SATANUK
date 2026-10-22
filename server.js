@@ -43,7 +43,8 @@ app.use(helmet({
 // Rate Limiting
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 login requests per windowMs
+  max: 30, // limit each IP to 30 login requests per windowMs
+  validate: { trustProxy: false },
   message: { success: false, message: 'Too many login attempts, please try again after 15 minutes' }
 });
 
@@ -139,10 +140,16 @@ function requireCustomerAuth(req, res, next) {
 // API Routes
 
 // Helper to log login attempts to database (detects real client IP and browser User Agent)
-async function logLoginAttempt(username, req, status, reason) {
+async function logLoginAttempt(username, reqOrIp, status, reason) {
     try {
-        const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.ip || req.socket.remoteAddress;
-        const ua = req.headers['user-agent'] || 'unknown';
+        let ip = 'unknown';
+        let ua = 'unknown';
+        if (reqOrIp && typeof reqOrIp === 'object' && reqOrIp.headers) {
+            ip = reqOrIp.headers['x-forwarded-for']?.split(',')[0].trim() || reqOrIp.ip || reqOrIp.socket?.remoteAddress || 'unknown';
+            ua = reqOrIp.headers['user-agent'] || 'unknown';
+        } else if (typeof reqOrIp === 'string') {
+            ip = reqOrIp;
+        }
         await db.query(
             `INSERT INTO login_audit_logs (username, ip_address, user_agent, status, reason) VALUES ($1, $2, $3, $4, $5)`,
             [username || 'unknown', ip || 'unknown', ua, status, reason]
@@ -251,12 +258,16 @@ app.post('/api/register', upload.single('idDocument'), async (req, res) => {
 
 // Customer Login
 app.post('/api/login', loginLimiter, async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
+    const cleanUsername = (username || '').toString().trim();
+    if (!cleanUsername || !password) {
+        return res.status(400).json({ success: false, message: 'Please enter both username and password' });
+    }
 
     try {
         const { rows } = await db.query(
-            `SELECT * FROM registrations WHERE username = $1`,
-            [username]
+            `SELECT * FROM registrations WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($1)`,
+            [cleanUsername]
         );
         const user = rows[0];
 
