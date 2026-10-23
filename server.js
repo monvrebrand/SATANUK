@@ -846,7 +846,12 @@ app.post('/api/admin/registrations/:id/status', requireAuth, async (req, res) =>
 
                 if (status === 'approved') {
                     const accountsHtml = generatedAccounts.length > 0
-                        ? '<ul>' + generatedAccounts.map(acc => `<li><strong>${acc.type} Account:</strong> ${acc.accountNumber}</li>`).join('') + '</ul>'
+                        ? '<ul>' + generatedAccounts.map(acc => {
+                            const typeTitle = (acc.type || 'Account').trim().toLowerCase().endsWith('account')
+                                ? (acc.type || 'Account').trim()
+                                : `${(acc.type || 'Account').trim()} Account`;
+                            return `<li><strong>${typeTitle}:</strong> ${acc.accountNumber}</li>`;
+                        }).join('') + '</ul>'
                         : '<p>Your account details will be sent in a separate communication.</p>';
 
                     html = `
@@ -1018,7 +1023,10 @@ app.post('/api/admin/accounts/:id/adjust-balance', requireAuth, async (req, res)
 
         // Optional notification to user (only for additions/credits so deductions are silent)
         if (notifyUser && isCredit && account.username) {
-            const notifMsg = `Your ${account.account_type} account (${account.account_number}) has been credited with £${amt.toFixed(2)}. ${description && description.trim() ? description.trim() : 'Admin Credit Adjustment'}`;
+            const typeTitle = (account.account_type || 'Account').trim().toLowerCase().endsWith('account')
+                ? (account.account_type || 'Account').trim()
+                : `${(account.account_type || 'Account').trim()} account`;
+            const notifMsg = `Your ${typeTitle} (${account.account_number}) has been credited with £${amt.toFixed(2)}. ${description && description.trim() ? description.trim() : 'Admin Credit Adjustment'}`;
             try {
                 await db.query(
                     `INSERT INTO notifications (username, message, type) VALUES ($1, $2, $3)`,
